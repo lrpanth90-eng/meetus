@@ -1,18 +1,35 @@
 {
-  "name": "meetus backend",
+  "name": "meetus-backend",
   "version": "1.0.0",
+  "description": "MeetUs backend server - advanced YouTube clone with live streaming, AI, and monetization.",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "mongoose": "^7.3.0",
-    "dotenv": "^16.3.1",
-    "cors": "^2.8.5",
-    "jsonwebtoken": "^9.0.0",
     "bcryptjs": "^2.4.3",
-    "morgan": "^1.10.0"
-  }
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.0",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.6.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "stripe": "^14.0.0",
+    "uuid": "^9.0.1",
+    "axios": "^1.6.0",
+    "socket.io": "^4.7.2",
+    "nodemailer": "^6.9.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.x"
+  },
+  "author": "MeetUs Dev Team",
+  "license": "MIT"
 }
