@@ -1,0 +1,7 @@
+module.exports = {
+  LIVE_STREAM_KEY_LENGTH: 16,
+  MAX_VIEWERS: 5000,
+  CHAT_MODERATION: true,
+  CAPTIONS_ENABLED: true,
+  SUPER_CHAT_ENABLED: true,
+};
