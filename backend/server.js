@@ -1,49 +1,74 @@
+// backend/server.js
+
+require('dotenv').config();
 const express = require('express');
+const mongoose = require('mongoose');
 const cors = require('cors');
 const morgan = require('morgan');
-const helmet = require('helmet');
-const dotenv = require('dotenv');
-const connectDB = require('./config/db');
-const { errorHandler } = require('./middleware/errorHandler');
+const path = require('path');
 
-dotenv.config();
-connectDB();
+// Import Routes
+const userRoutes = require('./routes/users');
+const videoRoutes = require('./routes/videos');
+const commentRoutes = require('./routes/comments');
+const playlistRoutes = require('./routes/playlists');
+const shortsRoutes = require('./routes/shorts');
+const liveRoutes = require('./routes/live');
+const adminRoutes = require('./routes/admin');
+const notificationRoutes = require('./routes/notifications');
+const subscriptionRoutes = require('./routes/subscriptions');
+const monetizationRoutes = require('./routes/monetization');
+const promotionRoutes = require('./routes/promotions');
+const transactionRoutes = require('./routes/transactions');
+const reportRoutes = require('./routes/reports');
+const aiContentRoutes = require('./routes/ai-content');
+const adRoutes = require('./routes/ads');
+
+const { authMiddleware } = require('./middleware/authMiddleware');
+const { errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
 
-app.use(helmet());
+// Middleware
 app.use(cors());
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
-// Routes
-app.use('/api/admin', require('./routes/admin'));
-app.use('/api/ads', require('./routes/ads'));
-app.use('/api/analytics', require('./routes/analytics'));
-app.use('/api/ai-content', require('./routes/ai-content'));
-app.use('/api/chat-moderation', require('./routes/chat-moderation'));
-app.use('/api/comments', require('./routes/comments'));
-app.use('/api/creator', require('./routes/creator'));
-app.use('/api/live', require('./routes/live'));
-app.use('/api/live-ai', require('./routes/live-ai'));
-app.use('/api/live-captions', require('./routes/live-captions'));
-app.use('/api/live-translation', require('./routes/live-translation'));
-app.use('/api/live-superchat', require('./routes/live-superchat'));
-app.use('/api/monetization', require('./routes/monetization'));
-app.use('/api/notifications', require('./routes/notifications'));
-app.use('/api/playlists', require('./routes/playlists'));
-app.use('/api/promotions', require('./routes/promotions'));
-app.use('/api/reports', require('./routes/reports'));
-app.use('/api/shorts', require('./routes/shorts'));
-app.use('/api/subscriptions', require('./routes/subscriptions'));
-app.use('/api/transactions', require('./routes/transactions'));
-app.use('/api/users', require('./routes/users'));
-app.use('/api/videos', require('./routes/videos'));
-app.use('/api/watch-later', require('./routes/watch-later'));
+// Static files for uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Error Handling
+// Routes
+app.use('/api/users', userRoutes);
+app.use('/api/videos', videoRoutes);
+app.use('/api/comments', commentRoutes);
+app.use('/api/playlists', playlistRoutes);
+app.use('/api/shorts', shortsRoutes);
+app.use('/api/live', liveRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/subscriptions', subscriptionRoutes);
+app.use('/api/monetization', monetizationRoutes);
+app.use('/api/promotions', promotionRoutes);
+app.use('/api/transactions', transactionRoutes);
+app.use('/api/reports', reportRoutes);
+app.use('/api/ai', aiContentRoutes);
+app.use('/api/ads', adRoutes);
+
+// Error handling
 app.use(errorHandler);
 
+// Connect to MongoDB
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/meetus';
+mongoose.connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+.then(() => console.log('MongoDB connected'))
+.catch(err => console.error('MongoDB connection error:', err));
+
+// Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
